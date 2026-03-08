@@ -8,6 +8,8 @@ import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { Input } from "@heroui/input";
 import { EyeIcon, EyeSlashIcon, SearchIcon } from "@/components/icons";
+import { signIn, getResponseStatus, getResponseMessage } from "@/lib/api/auth";
+import { setAuthCookie } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +17,35 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSignIn = async () => {
+    if (!username.trim() || !password.trim()) {
+      setError("Please enter username and password.");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await signIn({ username: username.trim(), password });
+      const statusCode = getResponseStatus(response);
+      if (statusCode === 200) {
+        setAuthCookie();
+        router.push("/dashboard");
+      } else {
+        const msg =
+          getResponseMessage(response) ??
+          response.error ??
+          "Login failed. Please check your credentials.";
+        setError(msg);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--auth-bg)] px-4 py-12">
@@ -120,11 +151,17 @@ export default function LoginPage() {
               </Checkbox>
             </div>
 
+            {error && (
+              <p className="text-sm text-red-600" role="alert">
+                {error}
+              </p>
+            )}
             <Button
               className="w-full bg-[var(--auth-input)] text-white"
+              isLoading={isLoading}
               size="lg"
               variant="flat"
-              onPress={() => router.push("/dashboard")}
+              onPress={handleSignIn}
             >
               Sign In
             </Button>

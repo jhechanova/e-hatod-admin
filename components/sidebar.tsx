@@ -24,6 +24,7 @@ import {
   UsersIcon,
 } from "@/components/icons";
 import { mainNavItems, bottomNavItems } from "@/config/navigation";
+import { logout } from "@/lib/auth";
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   home: HomeIcon,
@@ -235,7 +236,7 @@ export function Sidebar() {
             <LogoutIcon className="h-5 w-5 text-[var(--dashboard-text-on-dark)]" />
           }
           variant="light"
-          onPress={() => router.push("/")}
+          onPress={() => logout(router.push)}
         >
           {!isCollapsed && "Logout"}
         </Button>
