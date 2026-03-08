@@ -11,6 +11,31 @@ import { EyeIcon, EyeSlashIcon, SearchIcon } from "@/components/icons";
 import { signIn, getResponseStatus, getResponseMessage } from "@/lib/api/auth";
 import { setAuthCookie } from "@/lib/auth";
 
+function FieldLabel({
+  children,
+  required,
+  htmlFor,
+}: {
+  children: React.ReactNode;
+  required?: boolean;
+  htmlFor?: string;
+}) {
+  return (
+    <label
+      className="mb-1.5 block text-sm font-semibold text-gray-900 antialiased"
+      htmlFor={htmlFor}
+      style={{ WebkitFontSmoothing: "antialiased" }}
+    >
+      {required && (
+        <span className="mr-0.5 text-red-600" aria-hidden>
+          *
+        </span>
+      )}
+      {children}
+    </label>
+  );
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -18,15 +43,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+    if (!username.trim()) errors.username = "Username is required.";
+    else if (username.length < 6 || !/^[a-zA-Z0-9]+$/.test(username))
+      errors.username = "Username must be at least 6 characters, letters and numbers only.";
+    if (!password.trim()) errors.password = "Password is required.";
+    else if (password.length < 8 || !/[a-zA-Z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password))
+      errors.password = "Password must be at least 8 characters with letters, numbers, and special characters.";
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSignIn = async () => {
-    if (!username.trim() || !password.trim()) {
-      setError("Please enter username and password.");
-      return;
-    }
+    if (!validateForm()) return;
     setIsLoading(true);
-    setError(null);
+    setFieldErrors({});
     try {
       const response = await signIn({ username: username.trim(), password });
       const statusCode = getResponseStatus(response);
@@ -38,10 +72,13 @@ export default function LoginPage() {
           getResponseMessage(response) ??
           response.error ??
           "Login failed. Please check your credentials.";
-        setError(msg);
+        setFieldErrors((prev) => ({ ...prev, _form: msg }));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+      setFieldErrors((prev) => ({
+        ...prev,
+        _form: err instanceof Error ? err.message : "Login failed. Please try again.",
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -52,17 +89,14 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8">
         {/* Logo & Brand */}
         <div className="flex flex-col items-center gap-4">
-          <Avatar
+          {/* <Avatar
             className="h-24 w-24 bg-[var(--auth-input)]"
             icon={<span className="text-4xl">🚗</span>}
             name="BOHOL e-Hatod"
-          />
+          /> */}
           <div className="text-center">
             <h1 className="text-2xl font-bold text-[var(--dashboard-text-on-light)]">
-              BOHOL
-            </h1>
-            <h1 className="text-xl font-bold text-[var(--dashboard-text-on-light)]">
-              e-Hatod
+              BOHOL e-Hatod
             </h1>
           </div>
           <h2 className="text-xl font-semibold text-[var(--dashboard-text-on-light)]">
@@ -71,38 +105,54 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm">
+        <div
+          className="rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm"
+          style={{
+            WebkitFontSmoothing: "antialiased",
+            MozOsxFontSmoothing: "grayscale",
+          }}
+        >
           <div className="space-y-4">
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-[var(--dashboard-text-on-light)]"
-                htmlFor="login-username"
-              >
+              <FieldLabel required htmlFor="login-username">
                 Username
-              </label>
+              </FieldLabel>
               <Input
                 id="login-username"
                 aria-label="Username"
+                aria-invalid={!!fieldErrors.username}
                 classNames={{
                   inputWrapper:
                     "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
                 }}
+                errorMessage={fieldErrors.username}
+                isInvalid={!!fieldErrors.username}
                 placeholder="Enter username"
                 value={username}
-                onValueChange={setUsername}
+                onValueChange={(v) => {
+                  setUsername(v);
+                  setFieldErrors((e) => {
+                    const next = { ...e };
+                    delete next.username;
+                    if (e._form) delete next._form;
+                    return next;
+                  });
+                }}
               />
+              <p className="mt-1 text-xs text-[var(--dashboard-text-on-light-muted)]">
+                Username must be at least 6 characters, combination of letter/s
+                and number/s
+              </p>
             </div>
 
             <div>
-              <label
-                className="mb-1 block text-sm font-medium text-[var(--dashboard-text-on-light)]"
-                htmlFor="login-password"
-              >
+              <FieldLabel required htmlFor="login-password">
                 Password
-              </label>
+              </FieldLabel>
               <Input
                 id="login-password"
                 aria-label="Password"
+                aria-invalid={!!fieldErrors.password}
                 classNames={{
                   inputWrapper:
                     "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
@@ -121,10 +171,20 @@ export default function LoginPage() {
                     )}
                   </button>
                 }
+                errorMessage={fieldErrors.password}
+                isInvalid={!!fieldErrors.password}
                 placeholder="Enter password"
                 type={isPasswordVisible ? "text" : "password"}
                 value={password}
-                onValueChange={setPassword}
+                onValueChange={(v) => {
+                  setPassword(v);
+                  setFieldErrors((e) => {
+                    const next = { ...e };
+                    delete next.password;
+                    if (e._form) delete next._form;
+                    return next;
+                  });
+                }}
               />
               <p className="mt-1 text-xs text-[var(--dashboard-text-on-light-muted)]">
                 Password must be at least 8 characters combination of letter/s,
@@ -151,9 +211,9 @@ export default function LoginPage() {
               </Checkbox>
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600" role="alert">
-                {error}
+            {fieldErrors._form && (
+              <p className="text-sm font-medium text-red-600" role="alert">
+                {fieldErrors._form}
               </p>
             )}
             <Button
