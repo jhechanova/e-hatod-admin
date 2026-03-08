@@ -1,5 +1,5 @@
 {
-  "name": "next-app-template",
+  "name": "e-hatod-admin",
   "version": "0.0.1",
   "type": "module",
   "private": true,
@@ -61,6 +61,9 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.4.1",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^9.39.4",
     "@next/eslint-plugin-next": "15.5.9",
     "@react-types/shared": "3.33.0",
     "@tailwindcss/postcss": "4.1.11",

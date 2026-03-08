@@ -10,3 +10,30 @@
     --font-sans: "font", sans-serif;
     --font-mono: "monospace", monospace;
 }
+
+/* BOHOL e-Hatod dashboard color variables (Image 1) */
+:root,
+.dark {
+    /* Sidebar - dark purple */
+    --dashboard-sidebar: #4C2F8B;
+    --dashboard-sidebar-active: #8C6AD3;
+    --dashboard-sidebar-border: rgba(255, 255, 255, 0.15);
+    /* Header - very dark grey */
+    --dashboard-header: #1A1A1A;
+    --dashboard-header-border: #2d2d2d;
+    /* Main content - light lavender */
+    --dashboard-content: #EBE6F1;
+    --dashboard-content-border: #d4cde0;
+    /* Text on dark (sidebar, header) */
+    --dashboard-text-on-dark: #ffffff;
+    --dashboard-text-on-dark-muted: rgba(255, 255, 255, 0.8);
+    /* Text on light (content area) */
+    --dashboard-text-on-light: #1f2937;
+    --dashboard-text-on-light-muted: #6b7280;
+    /* Button - medium purple */
+    --dashboard-button: #6B4C9A;
+    /* Auth pages */
+    --auth-bg: #F0E8F8;
+    --auth-input: #6B4C9A;
+    --auth-input-text: #ffffff;
+}
