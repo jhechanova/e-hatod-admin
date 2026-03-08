@@ -36,4 +36,54 @@
     --auth-bg: #F0E8F8;
     --auth-input: #6B4C9A;
     --auth-input-text: #ffffff;
+    /* Form fields - high contrast for visibility */
+    --form-field-bg: #ffffff;
+    --form-field-text: #000000;
+    --form-field-border: #9ca3af;
+    --form-field-placeholder: #6b7280;
+}
+
+/* Force black text on white background for form inputs (override theme/dark mode) */
+.form-fields-visible input[type="text"],
+.form-fields-visible input[type="email"],
+.form-fields-visible input[type="password"],
+.form-fields-visible input[type="search"],
+.form-fields-visible input[type="tel"],
+.form-fields-visible textarea,
+.form-fields-visible [role="combobox"] {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+.form-fields-visible input::placeholder,
+.form-fields-visible textarea::placeholder {
+  color: #6b7280 !important;
+}
+/* Input wrapper background (HeroUI wraps input in div) */
+.form-fields-visible [class*="input-wrapper"],
+.form-fields-visible [class*="inputWrapper"] {
+  background-color: #ffffff !important;
+}
+
+/* Select/dropdown trigger and content - white bg, black text */
+.form-fields-visible [data-slot="trigger"],
+.form-fields-visible [data-slot="base"],
+.form-fields-visible button[aria-haspopup="listbox"],
+.form-fields-visible [role="combobox"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+.form-fields-visible [data-slot="listbox"],
+.form-fields-visible [role="listbox"],
+.form-fields-visible [data-slot="popover-content"] {
+  background-color: #ffffff !important;
+}
+.form-fields-visible [role="option"],
+.form-fields-visible [data-slot="listbox-item"] {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+.form-fields-visible [role="option"]:hover,
+.form-fields-visible [data-slot="listbox-item"]:hover {
+  background-color: #f3f4f6 !important;
+  color: #000000 !important;
 }

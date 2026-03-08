@@ -3,6 +3,8 @@
  * Use setAuthCookie on login success, clearAuthCookie on logout.
  */
 
+import { clearStoredUser } from "./user";
+
 const AUTH_COOKIE_NAME = "ehatod_auth";
 const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24; // 24 hours
 
@@ -18,8 +20,9 @@ export function clearAuthCookie(): void {
   document.cookie = `${AUTH_COOKIE_NAME}=; path=/; max-age=0`;
 }
 
-/** Logout: clear cookie and redirect to login. Pass router.push or similar. */
+/** Logout: clear cookie, user, and redirect to login. Pass router.push or similar. */
 export function logout(redirect: (path: string) => void): void {
   clearAuthCookie();
+  clearStoredUser();
   redirect("/login");
 }

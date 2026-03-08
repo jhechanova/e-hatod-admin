@@ -10,6 +10,7 @@ import { Input } from "@heroui/input";
 import { EyeIcon, EyeSlashIcon, SearchIcon } from "@/components/icons";
 import { signIn, getResponseStatus, getResponseMessage } from "@/lib/api/auth";
 import { setAuthCookie } from "@/lib/auth";
+import { setStoredUser } from "@/lib/user";
 
 function FieldLabel({
   children,
@@ -66,6 +67,7 @@ export default function LoginPage() {
       const statusCode = getResponseStatus(response);
       if (statusCode === 200) {
         setAuthCookie();
+        setStoredUser(response.jsonBody);
         router.push("/dashboard");
       } else {
         const msg =
@@ -106,7 +108,7 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <div
-          className="rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm"
+          className="form-fields-visible rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm"
           style={{
             WebkitFontSmoothing: "antialiased",
             MozOsxFontSmoothing: "grayscale",
@@ -122,8 +124,8 @@ export default function LoginPage() {
                 aria-label="Username"
                 aria-invalid={!!fieldErrors.username}
                 classNames={{
-                  inputWrapper:
-                    "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                  input: "!text-black placeholder:!text-gray-500",
+                  inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                 }}
                 errorMessage={fieldErrors.username}
                 isInvalid={!!fieldErrors.username}
@@ -154,13 +156,13 @@ export default function LoginPage() {
                 aria-label="Password"
                 aria-invalid={!!fieldErrors.password}
                 classNames={{
-                  inputWrapper:
-                    "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                  input: "!text-black placeholder:!text-gray-500",
+                  inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                 }}
                 endContent={
                   <button
                     aria-label="Toggle password visibility"
-                    className="text-[var(--auth-input-text)] focus:outline-none"
+                    className="text-black focus:outline-none"
                     type="button"
                     onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   >
@@ -239,7 +241,7 @@ export default function LoginPage() {
         </div>
 
         {/* Tracking Number */}
-        <div className="space-y-2">
+        <div className="form-fields-visible space-y-2">
           <label
             className="block text-sm font-medium text-[var(--dashboard-text-on-light)]"
             htmlFor="tracking-number"
@@ -250,8 +252,8 @@ export default function LoginPage() {
             id="tracking-number"
             aria-label="Tracking Number"
             classNames={{
-              inputWrapper:
-                "bg-white border border-[var(--dashboard-content-border)]",
+              input: "!text-black placeholder:!text-gray-500",
+              inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
             }}
             endContent={
               <SearchIcon className="h-5 w-5 text-[var(--dashboard-text-on-light-muted)]" />

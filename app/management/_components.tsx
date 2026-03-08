@@ -114,7 +114,7 @@ export function UsersTable() {
           aria-label="Filter by status"
           classNames={{
             trigger:
-              "bg-white border border-[var(--dashboard-content-border)] min-w-[140px]",
+              "!bg-white !text-black border border-[var(--form-field-border)] min-w-[140px] [&_[data-slot=value]]:!text-black [&_[data-slot=placeholder]]:!text-gray-500",
           }}
           label="Status"
           placeholder="All"
@@ -243,7 +243,7 @@ export function TransactionsTable() {
           aria-label="Filter by status"
           classNames={{
             trigger:
-              "bg-white border border-[var(--dashboard-content-border)] min-w-[140px]",
+              "!bg-white !text-black border border-[var(--form-field-border)] min-w-[140px] [&_[data-slot=value]]:!text-black [&_[data-slot=placeholder]]:!text-gray-500",
           }}
           label="Status"
           placeholder="All"

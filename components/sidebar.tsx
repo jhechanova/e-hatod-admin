@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  DropdownSection,
+} from "@heroui/dropdown";
 import clsx from "clsx";
 
 import {
@@ -25,6 +33,7 @@ import {
 } from "@/components/icons";
 import { mainNavItems, bottomNavItems } from "@/config/navigation";
 import { logout } from "@/lib/auth";
+import { getStoredUser } from "@/lib/user";
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   home: HomeIcon,
@@ -47,6 +56,11 @@ export function Sidebar() {
     "/management": true,
   });
   const pathname = usePathname();
+  const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
+
+  useEffect(() => {
+    setUser(getStoredUser());
+  }, []);
 
   const toggleSection = (href: string) => {
     if (!isCollapsed) {
@@ -110,23 +124,86 @@ export function Sidebar() {
         isCollapsed ? "w-[72px]" : "w-64",
       )}
     >
-      {/* Logo & Brand */}
+      {/* Logo & Brand + Account Dropdown */}
       <div>
         <div className="px-4 pt-4 text-[var(--dashboard-text-on-dark-muted)] text-xs font-normal normal-case">
           {date} {time}
         </div>
         <div className="px-4 py-2 flex items-center gap-3 border-b border-[var(--dashboard-sidebar-border)]">
-          <Logo className="text-[var(--dashboard-text-on-dark)] shrink-0" size={32} />
-          {!isCollapsed && (
-            <div className="min-w-0">
-              <p className="font-bold text-[var(--dashboard-text-on-dark)] text-sm truncate">
-                BOHOL e-Hatod
-              </p>
-              <p className="text-[var(--dashboard-text-on-dark-muted)] text-xs truncate">
-                Assistant System Administrator
-              </p>
-            </div>
-          )}
+          {/* <Logo className="text-[var(--dashboard-text-on-dark)] shrink-0" size={32} /> */}
+          <Dropdown
+            placement={isCollapsed ? "right-end" : "bottom-end"}
+            classNames={{
+              content: "min-w-[180px]",
+            }}
+          >
+            <DropdownTrigger>
+              <Button
+                isIconOnly={isCollapsed}
+                className="shrink-0 bg-transparent text-[var(--dashboard-text-on-dark)] hover:bg-white/10 min-w-0 p-0"
+                variant="light"
+                aria-label="Account menu"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Avatar
+                    className="h-8 w-8 shrink-0 bg-white/20 text-[var(--dashboard-text-on-dark)]"
+                    name={user?.firstName || user?.username || "User"}
+                    size="sm"
+                  />
+                  {!isCollapsed && (
+                    <ChevronDownIcon className="h-4 w-4 shrink-0 text-[var(--dashboard-text-on-dark-muted)]" />
+                  )}
+                </div>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Account actions"
+              onAction={(key) => {
+                if (key === "account") router.push("/account");
+                if (key === "logout") logout(router.push);
+              }}
+            >
+              <DropdownSection title="Account">
+                <DropdownItem
+                  key="account"
+                  startContent={<UserIcon className="h-4 w-4" />}
+                  href="/account"
+                  as={NextLink}
+                >
+                  My Account
+                </DropdownItem>
+                <DropdownItem
+                  key="logout"
+                  startContent={<LogoutIcon className="h-4 w-4" />}
+                  className="text-danger"
+                  color="danger"
+                >
+                  Logout
+                </DropdownItem>
+              </DropdownSection>
+            </DropdownMenu>
+          </Dropdown>
+          <div
+            className={clsx(
+              "flex min-w-0 flex-1 items-center gap-2",
+              isCollapsed ? "justify-center" : "justify-between"
+            )}
+          >
+            {!isCollapsed && (
+              <div className="min-w-0">
+                <p className="font-bold text-[var(--dashboard-text-on-dark)] text-sm truncate">
+                  {user
+                    ? [user.firstName, user.lastName].filter(Boolean).join(" ").trim() ||
+                    user.username ||
+                    "User"
+                    : "BOHOL e-Hatod"}
+                </p>
+                <p className="text-[var(--dashboard-text-on-dark-muted)] text-xs truncate">
+                  Assistant System Administrator
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -152,7 +229,7 @@ export function Sidebar() {
                     "text-[var(--dashboard-text-on-dark)]",
                     "hover:bg-white/10",
                     (pathname === item.href || isChildActive) &&
-                      "bg-[var(--dashboard-sidebar-active)]",
+                    "bg-[var(--dashboard-sidebar-active)]",
                   )}
                   onClick={() => toggleSection(item.href)}
                   role="button"
@@ -189,7 +266,7 @@ export function Sidebar() {
                             "text-[var(--dashboard-text-on-dark)]",
                             "hover:bg-white/10",
                             pathname === child.href &&
-                              "bg-[var(--dashboard-sidebar-active)]"
+                            "bg-[var(--dashboard-sidebar-active)]"
                           )}
                         >
                           <span className="text-sm">{child.label}</span>
@@ -227,20 +304,6 @@ export function Sidebar() {
           ))}
         </div>
       </nav>
-
-      {/* Logout */}
-      <div className="p-2 border-t border-[var(--dashboard-sidebar-border)]">
-        <Button
-          className="w-full justify-start text-[var(--dashboard-text-on-dark)] hover:bg-white/10"
-          startContent={
-            <LogoutIcon className="h-5 w-5 text-[var(--dashboard-text-on-dark)]" />
-          }
-          variant="light"
-          onPress={() => logout(router.push)}
-        >
-          {!isCollapsed && "Logout"}
-        </Button>
-      </div>
 
       {/* Collapse Toggle */}
       <div className="p-2 border-t border-[var(--dashboard-sidebar-border)]">

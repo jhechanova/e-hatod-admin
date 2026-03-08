@@ -132,3 +132,70 @@ export async function signUp(params: SignUpParams): Promise<SignUpResponse> {
     ...(response.ok ? {} : { error: response.statusText }),
   };
 }
+
+export interface UpdateUserParams {
+  userId: number;
+  username: string;
+  password?: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  municipality: number;
+  barangay: number;
+  address?: string;
+  email?: string;
+  suffixName?: string;
+  middleInitial?: string;
+}
+
+/**
+ * Update user - POST to api.cf with mobile_user/update template.
+ * Matches UpdateUserCall in e-hatod api_calls.dart
+ */
+export async function updateUser(params: UpdateUserParams): Promise<SignInResponse> {
+  const body: Record<string, string | number> = {
+    tpl: "mobile_user",
+    tph: "update",
+    user_id: params.userId,
+    username: params.username ?? "",
+    first_name: params.firstName ?? "",
+    last_name: params.lastName ?? "",
+    phone_number: params.phoneNumber ?? "",
+    municipality: params.municipality ?? 0,
+    barangay: params.barangay ?? 0,
+    address: params.address ?? "",
+    email: params.email ?? "",
+    suffix_name: params.suffixName ?? "",
+    middle_initial: params.middleInitial ?? "",
+  };
+  if (params.password !== undefined && params.password !== "") {
+    body.password = params.password;
+  }
+
+  const urlParams = new URLSearchParams();
+  for (const [k, v] of Object.entries(body)) {
+    urlParams.append(k, String(v));
+  }
+
+  const response = await fetch(API_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: urlParams.toString(),
+  });
+
+  let jsonBody: Record<string, unknown> | undefined;
+  try {
+    const data = await response.json();
+    jsonBody = typeof data === "object" ? data : undefined;
+  } catch {
+    jsonBody = undefined;
+  }
+
+  return {
+    statusCode: response.status,
+    jsonBody,
+    ...(response.ok ? {} : { error: response.statusText }),
+  };
+}

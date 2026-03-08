@@ -28,7 +28,6 @@ export const mainNavItems: NavItem[] = [
       { label: "Transaction Management", href: "/management/transactions" },
     ],
   },
-  { label: "My Account", href: "/account", icon: "user" },
 ];
 
 export function getAllNavPaths(): { href: string; label: string; icon: string }[] {

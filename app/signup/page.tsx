@@ -176,7 +176,7 @@ export default function SignupPage() {
 
         {/* Signup Form */}
         <div
-          className="rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm"
+          className="form-fields-visible rounded-xl border border-[var(--dashboard-content-border)] bg-white p-6 shadow-sm"
           style={{
             WebkitFontSmoothing: "antialiased",
             MozOsxFontSmoothing: "grayscale",
@@ -195,8 +195,8 @@ export default function SignupPage() {
                     aria-label="Family name"
                     aria-invalid={!!fieldErrors.familyName}
                     classNames={{
-                      inputWrapper:
-                        "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                      input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                     }}
                     errorMessage={fieldErrors.familyName}
                     isInvalid={!!fieldErrors.familyName}
@@ -216,8 +216,8 @@ export default function SignupPage() {
                     id="middle-initial"
                     aria-label="Middle initial"
                     classNames={{
-                      inputWrapper:
-                        "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                      input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                     }}
                     placeholder="M.I."
                     value={middleInitial}
@@ -235,8 +235,8 @@ export default function SignupPage() {
                     aria-label="First name"
                     aria-invalid={!!fieldErrors.firstName}
                     classNames={{
-                      inputWrapper:
-                        "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                      input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                     }}
                     errorMessage={fieldErrors.firstName}
                     isInvalid={!!fieldErrors.firstName}
@@ -257,7 +257,7 @@ export default function SignupPage() {
                     aria-label="Suffix"
                     classNames={{
                       trigger:
-                        "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0 min-h-12",
+                        "!bg-white !text-black border border-[var(--form-field-border)] min-h-12 [&_[data-slot=value]]:!text-black [&_[data-slot=placeholder]]:!text-gray-500",
                     }}
                     placeholder="Select"
                     selectedKeys={suffix ? [suffix] : []}
@@ -285,8 +285,8 @@ export default function SignupPage() {
                   aria-label="Username"
                   aria-invalid={!!fieldErrors.username}
                   classNames={{
-                    inputWrapper:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                    input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                   }}
                   errorMessage={fieldErrors.username}
                   isInvalid={!!fieldErrors.username}
@@ -313,8 +313,8 @@ export default function SignupPage() {
                   aria-label="Email"
                   aria-invalid={!!fieldErrors.email}
                   classNames={{
-                    inputWrapper:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                    input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                   }}
                   errorMessage={fieldErrors.email}
                   isInvalid={!!fieldErrors.email}
@@ -339,15 +339,14 @@ export default function SignupPage() {
                 aria-label="Mobile Number"
                 aria-invalid={!!fieldErrors.mobileNumber}
                 classNames={{
-                  input: "pl-14",
-                  inputWrapper:
-                    "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                  input: "pl-14 !text-black placeholder:!text-gray-500",
+                  inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                 }}
                 errorMessage={fieldErrors.mobileNumber}
                 isInvalid={!!fieldErrors.mobileNumber}
                 placeholder="9XX 123 4567"
                 startContent={
-                  <span className="text-[var(--auth-input-text)]">+63</span>
+                  <span className="text-black font-medium">+63</span>
                 }
                 value={mobileNumber}
                 onValueChange={(v) => {
@@ -373,13 +372,13 @@ export default function SignupPage() {
                   aria-label="Password"
                   aria-invalid={!!fieldErrors.password}
                   classNames={{
-                    inputWrapper:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                    input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                   }}
                   endContent={
                     <button
                       aria-label="Toggle password visibility"
-                      className="text-[var(--auth-input-text)] focus:outline-none"
+                      className="text-black focus:outline-none"
                       type="button"
                       onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                     >
@@ -416,13 +415,13 @@ export default function SignupPage() {
                   aria-label="Confirm password"
                   aria-invalid={!!fieldErrors.confirmPassword}
                   classNames={{
-                    inputWrapper:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                    input: "!text-black placeholder:!text-gray-500",
+                    inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                   }}
                   endContent={
                     <button
                       aria-label="Toggle password visibility"
-                      className="text-[var(--auth-input-text)] focus:outline-none"
+                      className="text-black focus:outline-none"
                       type="button"
                       onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                     >
@@ -461,8 +460,8 @@ export default function SignupPage() {
                 aria-label="Address"
                 aria-invalid={!!fieldErrors.address}
                 classNames={{
-                  inputWrapper:
-                    "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0",
+                  input: "!text-black placeholder:!text-gray-500",
+                  inputWrapper: "!bg-white !text-black border border-[var(--form-field-border)]",
                 }}
                 errorMessage={fieldErrors.address}
                 isInvalid={!!fieldErrors.address}
@@ -487,7 +486,7 @@ export default function SignupPage() {
                   aria-invalid={!!fieldErrors.municipalityId}
                   classNames={{
                     trigger:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0 min-h-12",
+                      "!bg-white !text-black border border-[var(--form-field-border)] min-h-12 [&_[data-slot=value]]:!text-black [&_[data-slot=placeholder]]:!text-gray-500",
                   }}
                   placeholder="Select city/town"
                   selectedKeys={municipalityId ? [municipalityId] : []}
@@ -518,7 +517,7 @@ export default function SignupPage() {
                   aria-invalid={!!fieldErrors.barangayId}
                   classNames={{
                     trigger:
-                      "bg-[var(--auth-input)] text-[var(--auth-input-text)] border-0 min-h-12",
+                      "!bg-white !text-black border border-[var(--form-field-border)] min-h-12 [&_[data-slot=value]]:!text-black [&_[data-slot=placeholder]]:!text-gray-500",
                   }}
                   isDisabled={!municipalityId}
                   placeholder="Select barangay"
